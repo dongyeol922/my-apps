@@ -1,16 +1,24 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { Layout } from "../pages/Layout";
-import { Board } from "../pages/Board";
 import { UserList } from "../pages/UserList";
 
+
 export const router = createBrowserRouter([
+
   {
     path: "/",
     element: <Layout/>,
     children: [
       {
+        index: true,
+        element: <Navigate to="/board" replace/>
+      },
+      {
         path: "board",
-        element: <Board />
+        lazy: async () => {
+          const { Board, boardLoader } = await import("../pages/Board")
+          return { element: <Board />, loader: boardLoader }
+        }
       },
       {
         path: "users",
